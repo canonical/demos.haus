@@ -1,0 +1,24 @@
+domain: k8s.demo.haus
+image: prod-web-team-demos.docker-registry.canonical.com/k8s.demo.haus
+
+env:
+  - name: SENTRY_DSN
+    value: https://8f10373e49b940c4b69225b132520ff0@sentry.is.canonical.com//27
+
+  - name: JENKINS_URL
+    secretKeyRef:
+      key: url
+      name: webteam-jenkins
+
+  - name: JENKINS_TOKEN
+    secretKeyRef:
+      key: demos-remote-build-token
+      name: webteam-jenkins
+
+  - name: GITHUB_WEBHOOK_SECRET
+    secretKeyRef:
+      key: demos-webook-secret
+      name: github
+
+demo:
+  replicas: 1

@@ -1,0 +1,30 @@
+{
+  "author": "Canonical Webteam",
+  "license": "LGPL v3",
+  "scripts": {
+    "clean": "rm -rf node_modules yarn-error.log css static/css *.log *.sqlite _site/ build/ .jekyll-metadata .bundle",
+    "watch": "watch -p 'static/sass/**/*.scss' -c 'yarn run build'",
+    "build": "yarn run build-css",
+    "build-css": "node-sass --include-path node_modules static/sass --output static/css --output-style compressed",
+    "format-python": "black --line-length 79 webapp",
+    "lint-python": "flake8 webapp tests && black --check --line-length 79 webapp tests",
+    "lint-scss": "stylelint 'static/**/*.scss'",
+    "serve": "./entrypoint 0.0.0.0:${PORT}",
+    "test": "yarn run lint-scss && yarn run lint-python && yarn run test-python",
+    "test-python": "python3 -m unittest discover tests"
+  },
+  "dependencies": {
+    "autoprefixer": "9.8.0",
+    "node-sass": "4.14.1",
+    "postcss-cli": "7.1.1",
+    "prettier": "2.0.5",
+    "stylelint": "13.5.0",
+    "stylelint-config-prettier": "8.0.1",
+    "stylelint-config-standard": "20.0.0",
+    "stylelint-order": "4.0.0",
+    "stylelint-prettier": "1.1.2",
+    "stylelint-scss": "3.17.2",
+    "vanilla-framework": "2.12.0",
+    "watch-cli": "0.2.3"
+  }
+}

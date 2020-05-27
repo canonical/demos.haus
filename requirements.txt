@@ -1,0 +1,2 @@
+canonicalwebteam.flask-base==0.6.1
+requests==2.23.0
