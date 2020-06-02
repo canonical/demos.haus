@@ -5,14 +5,17 @@ import requests
 from hashlib import sha1
 
 from canonicalwebteam.flask_base.app import FlaskBase
-from flask import render_template
+from github3 import login
 
-
+# Get required values from env or fail
 JENKINS_URL = os.environ["JENKINS_URL"]
 JENKINS_TOKEN = os.environ["JENKINS_TOKEN"]
+GITHUB_ACCESS_TOKEN = os.environ["GITHUB_ACCESS_TOKEN"]
 GITHUB_WEBHOOK_SECRET = os.environ["GITHUB_WEBHOOK_SECRET"]
 
-# Rename your project below
+# Create GitHub client
+ghub = login(token=GITHUB_ACCESS_TOKEN)
+
 app = FlaskBase(
     __name__,
     "k8s.demo.haus",
@@ -46,7 +49,7 @@ def validate_github_webhook_signature(payload, signature):
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return flask.render_template("index.html")
 
 
 @app.route("/hook/gh", methods = ['POST'])
@@ -61,11 +64,39 @@ def github_demo_webhook():
     pull_request = payload["number"]
     repo_owner = payload["repository"]["owner"]["login"]
     repo_name = payload["repository"]["name"]
-    sender = payload["sender"]["login"]
-    jenkins_job = get_jenkins_job(action)
-    jenkins_job_params = f"token={JENKINS_TOKEN}&REPO={repo_name}&PR={pull_request}"
+    author = payload["sender"]["login"]
 
+    issue = ghub.issue(repo_owner, repo_name, pull_request)
+    repo = ghub.repository(repo_owner, repo_name)
+    # Only trigger builds if PR author is a collaborator
+    if not repo.is_collaborator(author):
+        message = f"{author} is not a collaborator of the repo"
+        flask.jsonify({"messages": message}, 403)
+
+        # If the PR was opened post the error message
+        if action == "opened":
+            issue.create_comment(message)
+
+    # Work out the remote build utl
+    try:
+        jenkins_job = get_jenkins_job(action)
+    except KeyError:
+        return flask.jsonify({"message": f"No job for PR action: {action}"}), 200
+
+    jenkins_job_params = f"token={JENKINS_TOKEN}&REPO={repo_name}&PR={pull_request}"
     remote_build_url = f"http://{JENKINS_URL}/{jenkins_job}/buildWithParameters?{jenkins_job_params}"
-    response = requests.get(remote_build_url)
     
+    # Trigger the build in jenkins
+    if not app.debug:
+        response = requests.get(remote_build_url)
+        respose.raise_for_status()
+    else:
+        # In debug mode just print the URL
+        print(remote_build_url)
+
+    # If the PR was opened post the the link to the demo
+    if action == "opened":
+        domain = f"{repo_name.replace('.', '-')}-{pull_request}.k8s.demo.haus"
+        issue.create_comment(f"Demo starting at https://{domain}")
+
     return flask.jsonify({"messages": "Webhook handled"}, 200)
