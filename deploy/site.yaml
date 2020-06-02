@@ -15,10 +15,14 @@ env:
       key: demos-remote-build-token
       name: webteam-jenkins
 
+  - name: GITHUB_ACCESS_TOKEN
+    secretKeyRef:
+      key: webapp-access-token
+      name: github
+
   - name: GITHUB_WEBHOOK_SECRET
     secretKeyRef:
       key: demos-webook-secret
       name: github
-
 demo:
   replicas: 1
