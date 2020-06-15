@@ -89,7 +89,7 @@ def github_demo_webhook():
     # Trigger the build in jenkins
     if not app.debug:
         response = requests.get(remote_build_url)
-        respose.raise_for_status()
+        response.raise_for_status()
     else:
         # In debug mode just print the URL
         print(remote_build_url)
