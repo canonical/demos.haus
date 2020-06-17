@@ -7,6 +7,8 @@ from hashlib import sha1
 from canonicalwebteam.flask_base.app import FlaskBase
 from github3 import login
 
+from webapp.sso import init_sso, login_required
+
 # Get required values from env or fail
 JENKINS_URL = os.environ["JENKINS_URL"]
 JENKINS_TOKEN = os.environ["JENKINS_TOKEN"]
@@ -24,6 +26,8 @@ app = FlaskBase(
     template_404="404.html",
     template_500="500.html",
 )
+
+init_sso(app)
 
 
 def get_jenkins_job(action):
@@ -48,6 +52,7 @@ def validate_github_webhook_signature(payload, signature):
 
 
 @app.route("/")
+@login_required
 def index():
     return flask.render_template("index.html")
 
