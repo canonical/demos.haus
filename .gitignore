@@ -66,3 +66,7 @@ bower_components/
 
 build/
 dist/
+
+# Project specific
+.dotrun.json
+.venv/

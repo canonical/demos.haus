@@ -1,5 +1,6 @@
 canonicalwebteam.flask-base==0.6.1
 django-openid-auth==0.15
 github3.py==1.0.2
-requests==2.23.0
 Flask-OpenID-Stateless==1.2.6
+kubernetes==11.0.0 
+requests==2.23.0
