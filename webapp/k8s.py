@@ -1,10 +1,11 @@
 import os
+from distutils.util import strtobool
 
 from kubernetes import config, client
 
 # Load the config for to use the SDK
-in_k8s_cluster = os.getenv("IN_K8S_CLUSTER", "false")
-if in_k8s_cluster == "true":
+in_k8s_cluster = strtobool(os.getenv("IN_K8S_CLUSTER", "False"))
+if in_k8s_cluster:
     config.load_incluster_config()
 else:
     config.load_kube_config()
