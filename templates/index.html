@@ -44,7 +44,37 @@
       <!-- Add main content below -->
       <div class="p-strip--dark">
         <div class="u-fixed-width">
-	    <h1>k8s.demo.haus</h1>
+	    	<h1>Demoservice</h1>
+        </div>
+      </div>
+      <div class="p-strip is-shallow">
+        <div class="row">
+          <h1 class="p-heading--3"> Jenkins Jobs</h1>
+          <a href="https://jenkins.canonical.com/webteam/view/demos/job/start-demo/">Start demo</a>
+          <a href="https://jenkins.canonical.com/webteam/view/demos/job/stop-demo/">Stop demo</a>
+        </div>
+      </div>
+      <div  class="p-strip">
+        <div class="row">
+        <h1 class="p-heading--3">Running demos</h1>
+          <div class="u-fixed-width">
+            <table>
+            <thead>
+              <tr>
+                <th>Name</th>	    	
+                <th>Host</th>	    	
+              </tr>
+            </thead>
+            {% for demo in demos %}
+          <tbody>
+            <tr>
+              <td>{{demo.name}}</td>	    	
+              <td><a href="{{demo.host}}">{{demo.host}}</a></td>	    	
+            </tr>
+            {% endfor %}
+            </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </main>

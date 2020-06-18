@@ -5,6 +5,9 @@ env:
   - name: SENTRY_DSN
     value: https://8f10373e49b940c4b69225b132520ff0@sentry.is.canonical.com//27
 
+  - name: IN_K8S_CLUSTER
+    value: true
+
   - name: JENKINS_URL
     secretKeyRef:
       key: url

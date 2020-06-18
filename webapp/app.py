@@ -7,6 +7,7 @@ from hashlib import sha1
 from canonicalwebteam.flask_base.app import FlaskBase
 from github3 import login
 
+from webapp.k8s import get_running_demos
 from webapp.sso import init_sso, login_required
 
 # Get required values from env or fail
@@ -54,7 +55,8 @@ def validate_github_webhook_signature(payload, signature):
 @app.route("/")
 @login_required
 def index():
-    return flask.render_template("index.html")
+    demos = get_running_demos()
+    return flask.render_template("index.html", demos=demos)
 
 
 @app.route("/hook/gh", methods = ['POST'])
