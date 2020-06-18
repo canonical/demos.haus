@@ -27,7 +27,7 @@ ENV LANG C.UTF-8
 WORKDIR /srv
 
 # Install python and import python dependencies
-RUN apt-get update && apt-get install --no-install-recommends --yes python3 python3-distutils python3-lib2to3 python3-pkg-resources
+RUN apt-get update && apt-get install --no-install-recommends --yes python3 python3-distutils python3-lib2to3 python3-pkg-resources ca-certificates
 ENV PATH="/root/.local/bin:${PATH}"
 
 # Copy python dependencies
