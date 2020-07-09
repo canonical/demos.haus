@@ -1,5 +1,5 @@
-domain: k8s.demo.haus
-image: prod-web-team-demos.docker-registry.canonical.com/k8s.demo.haus
+domain: demos.haus
+image: prod-web-team-demos.docker-registry.canonical.com/demos.haus
 
 env:
   - name: SENTRY_DSN
