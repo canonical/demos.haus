@@ -21,7 +21,7 @@ ghub = login(token=GITHUB_ACCESS_TOKEN)
 
 app = FlaskBase(
     __name__,
-    "k8s.demo.haus",
+    "demos.haus",
     template_folder="../templates",
     static_folder="../static",
     template_404="404.html",
