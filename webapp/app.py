@@ -103,7 +103,7 @@ def github_demo_webhook():
 
     # If the PR was opened post the the link to the demo
     if action == "opened":
-        domain = f"{repo_name.replace('.', '-')}-{pull_request}.k8s.demo.haus"
+        domain = f"{repo_name.replace('.', '-')}-{pull_request}.demos.haus"
         issue.create_comment(f"Demo starting at https://{domain}")
 
     return flask.jsonify({"messages": "Webhook handled"}, 200)
