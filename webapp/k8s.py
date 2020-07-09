@@ -18,7 +18,7 @@ def get_running_demos():
     ingresses = extensionsv1.list_namespaced_ingress("default", watch=False)
     demos = []
     for ingress in ingresses.items:
-        if ingress.metadata.name != "k8s-demo-haus":
+        if ingress.metadata.name not in ["demos-haus", "tools-demos-haus"]:
             demos.append({
                 "name": ingress.metadata.name,
                 "host": f"https://{ingress.spec.rules[0].host}"
