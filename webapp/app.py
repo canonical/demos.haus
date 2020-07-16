@@ -78,11 +78,12 @@ def github_demo_webhook():
     # Only trigger builds if PR author is a collaborator
     if not repo.is_collaborator(author):
         message = f"{author} is not a collaborator of the repo"
-        flask.jsonify({"messages": message}, 403)
 
         # If the PR was opened post the error message
         if action == "opened":
             issue.create_comment(message)
+
+        return flask.jsonify({"messages": message}, 403)
 
     # Work out the remote build utl
     try:
