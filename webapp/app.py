@@ -64,8 +64,12 @@ def github_demo_webhook():
     if not validate_github_webhook_signature(
         flask.request.data, flask.request.headers.get("X-Hub-Signature")
     ):
-        return flask.jsonify({"messages": "Invalid secret"}, 403)
+        return flask.jsonify({"message": "Invalid secret"}, 403)
 
+    # Say hi to github when we do the initial setup.
+    if flask.request.headers.get("X-GitHub-Event") == "ping":
+        return flask.jsonify({"message": "Hi Github!"}, 200)
+    
     payload = flask.request.json
     action = payload["action"]
     pull_request = payload["number"]
@@ -75,6 +79,7 @@ def github_demo_webhook():
 
     issue = ghub.issue(repo_owner, repo_name, pull_request)
     repo = ghub.repository(repo_owner, repo_name)
+
     # Only trigger builds if PR author is a collaborator
     if not repo.is_collaborator(author):
         message = f"{author} is not a collaborator of the repo"
@@ -83,7 +88,7 @@ def github_demo_webhook():
         if action == "opened":
             issue.create_comment(message)
 
-        return flask.jsonify({"messages": message}, 403)
+        return flask.jsonify({"message": message}, 403)
 
     # Work out the remote build utl
     try:
@@ -107,4 +112,4 @@ def github_demo_webhook():
         domain = f"{repo_name.replace('.', '-')}-{pull_request}.demos.haus"
         issue.create_comment(f"Demo starting at https://{domain}")
 
-    return flask.jsonify({"messages": "Webhook handled"}, 200)
+    return flask.jsonify({"message": "Webhook handled"}, 200)
