@@ -73,6 +73,7 @@ def github_demo_webhook():
     payload = flask.request.json
     action = payload["action"]
     pull_request = payload["number"]
+    pull_request_url = payload["pull_request"]["html_url"]
     repo_owner = payload["repository"]["owner"]["login"]
     repo_name = payload["repository"]["name"]
     author = payload["sender"]["login"]
@@ -96,7 +97,7 @@ def github_demo_webhook():
     except KeyError:
         return flask.jsonify({"message": f"No job for PR action: {action}"}), 200
 
-    jenkins_job_params = f"token={JENKINS_TOKEN}&REPO={repo_name}&PR={pull_request}"
+    jenkins_job_params = f"token={JENKINS_TOKEN}&PR_URL={pull_request_url}"
     remote_build_url = f"http://{JENKINS_URL}/{jenkins_job}/buildWithParameters?{jenkins_job_params}"
     
     # Trigger the build in jenkins
