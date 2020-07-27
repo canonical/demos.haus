@@ -64,17 +64,23 @@ def github_demo_webhook():
     if not validate_github_webhook_signature(
         flask.request.data, flask.request.headers.get("X-Hub-Signature")
     ):
-        return flask.jsonify({"messages": "Invalid secret"}, 403)
+        return flask.jsonify({"message": "Invalid secret"}, 403)
 
+    # Say hi to github when we do the initial setup.
+    if flask.request.headers.get("X-GitHub-Event") == "ping":
+        return flask.jsonify({"message": "Hi Github!"}, 200)
+    
     payload = flask.request.json
     action = payload["action"]
     pull_request = payload["number"]
+    pull_request_url = payload["pull_request"]["html_url"]
     repo_owner = payload["repository"]["owner"]["login"]
     repo_name = payload["repository"]["name"]
     author = payload["sender"]["login"]
 
     issue = ghub.issue(repo_owner, repo_name, pull_request)
     repo = ghub.repository(repo_owner, repo_name)
+
     # Only trigger builds if PR author is a collaborator
     if not repo.is_collaborator(author):
         message = f"{author} is not a collaborator of the repo"
@@ -83,7 +89,7 @@ def github_demo_webhook():
         if action == "opened":
             issue.create_comment(message)
 
-        return flask.jsonify({"messages": message}, 403)
+        return flask.jsonify({"message": message}, 403)
 
     # Work out the remote build utl
     try:
@@ -91,7 +97,7 @@ def github_demo_webhook():
     except KeyError:
         return flask.jsonify({"message": f"No job for PR action: {action}"}), 200
 
-    jenkins_job_params = f"token={JENKINS_TOKEN}&REPO={repo_name}&PR={pull_request}"
+    jenkins_job_params = f"token={JENKINS_TOKEN}&PR_URL={pull_request_url}"
     remote_build_url = f"http://{JENKINS_URL}/{jenkins_job}/buildWithParameters?{jenkins_job_params}"
     
     # Trigger the build in jenkins
@@ -107,4 +113,4 @@ def github_demo_webhook():
         domain = f"{repo_name.replace('.', '-')}-{pull_request}.demos.haus"
         issue.create_comment(f"Demo starting at https://{domain}")
 
-    return flask.jsonify({"messages": "Webhook handled"}, 200)
+    return flask.jsonify({"message": "Webhook handled"}, 200)
