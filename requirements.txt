@@ -1,4 +1,4 @@
-canonicalwebteam.flask-base==0.6.1
+canonicalwebteam.flask-base==0.6.4
 django-openid-auth==0.15
 github3.py==1.0.2
 Flask-OpenID-Stateless==1.2.6
