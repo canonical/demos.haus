@@ -15,12 +15,12 @@
     "test-python": "python3 -m unittest discover tests"
   },
   "dependencies": {
-    "autoprefixer": "10.3.7",
-    "concurrently": "6.3.0",
-    "postcss": "8.3.9",
-    "postcss-cli": "9.0.1",
+    "autoprefixer": "10.4.0",
+    "concurrently": "6.4.0",
+    "postcss": "8.3.11",
+    "postcss-cli": "9.0.2",
     "prettier": "2.4.1",
-    "sass": "1.43.2",
+    "sass": "1.43.4",
     "stylelint": "13.13.1",
     "stylelint-config-prettier": "9.0.3",
     "stylelint-config-standard": "22.0.0",
