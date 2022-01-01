@@ -1100,11 +1100,6 @@ indent-string@^4.0.0:
   resolved "https://registry.yarnpkg.com/indent-string/-/indent-string-4.0.0.tgz#624f8f4497d619b2d9768531d58f4122854d7251"
   integrity sha512-EdDDZu4A2OyIK7Lr/2zG+w5jmbuk1DVBnEwREQvBzspBJkCEbRa8GxU1lghYcaGJCnRWibjDXlq779X1/y5xwg==
 
-indexes-of@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/indexes-of/-/indexes-of-1.0.1.tgz#f30f716c8e2bd346c7b67d3df3915566a7c05607"
-  integrity sha1-8w9xbI4r00bHtn0985FVZqfAVgc=
-
 inflight@^1.0.4:
   version "1.0.6"
   resolved "https://registry.yarnpkg.com/inflight/-/inflight-1.0.6.tgz#49bd6331d7d02d0c09bc910a1075ba8165b56df9"
@@ -1780,19 +1775,18 @@ postcss-scss@^2.1.1:
   dependencies:
     postcss "^7.0.6"
 
-postcss-selector-parser@^6.0.2:
-  version "6.0.2"
-  resolved "https://registry.yarnpkg.com/postcss-selector-parser/-/postcss-selector-parser-6.0.2.tgz#934cf799d016c83411859e09dcecade01286ec5c"
-  integrity sha512-36P2QR59jDTOAiIkqEprfJDsoNrvwFei3eCqKd1Y0tUsBimsq39BLp7RD+JWny3WgB1zGhJX8XVePwm9k4wdBg==
-  dependencies:
-    cssesc "^3.0.0"
-    indexes-of "^1.0.1"
-    uniq "^1.0.1"
-
 postcss-selector-parser@^6.0.5:
   version "6.0.6"
   resolved "https://registry.yarnpkg.com/postcss-selector-parser/-/postcss-selector-parser-6.0.6.tgz#2c5bba8174ac2f6981ab631a42ab0ee54af332ea"
   integrity sha512-9LXrvaaX3+mcv5xkg5kFwqSzSH1JIObIx51PrndZwlmznwXRfxMddDvo9gve3gVR8ZTKgoFDdWkbRFmEhT4PMg==
+  dependencies:
+    cssesc "^3.0.0"
+    util-deprecate "^1.0.2"
+
+postcss-selector-parser@^6.0.6:
+  version "6.0.8"
+  resolved "https://registry.yarnpkg.com/postcss-selector-parser/-/postcss-selector-parser-6.0.8.tgz#f023ed7a9ea736cd7ef70342996e8e78645a7914"
+  integrity sha512-D5PG53d209Z1Uhcc0qAZ5U3t5HagH3cxu+WLZ22jt3gLUpXM4eXXfiO14jiDWST3NNooX/E8wISfOhZ9eIjGTQ==
   dependencies:
     cssesc "^3.0.0"
     util-deprecate "^1.0.2"
@@ -2216,15 +2210,15 @@ stylelint-prettier@1.2.0:
   dependencies:
     prettier-linter-helpers "^1.0.0"
 
-stylelint-scss@3.21.0:
-  version "3.21.0"
-  resolved "https://registry.yarnpkg.com/stylelint-scss/-/stylelint-scss-3.21.0.tgz#9f50898691b16b1c1ca3945837381d98c5b22331"
-  integrity sha512-CMI2wSHL+XVlNExpauy/+DbUcB/oUZLARDtMIXkpV/5yd8nthzylYd1cdHeDMJVBXeYHldsnebUX6MoV5zPW4A==
+stylelint-scss@4.1.0:
+  version "4.1.0"
+  resolved "https://registry.yarnpkg.com/stylelint-scss/-/stylelint-scss-4.1.0.tgz#39b808696f8152081163d970449257ff80b5c041"
+  integrity sha512-BNYTo7MMamhFOlcaAWp2dMpjg6hPyM/FFqfDIYzmYVLMmQJqc8lWRIiTqP4UX5bresj9Vo0dKC6odSh43VP2NA==
   dependencies:
-    lodash "^4.17.15"
+    lodash "^4.17.21"
     postcss-media-query-parser "^0.2.3"
     postcss-resolve-nested-selector "^0.1.1"
-    postcss-selector-parser "^6.0.2"
+    postcss-selector-parser "^6.0.6"
     postcss-value-parser "^4.1.0"
 
 stylelint@13.13.1:
@@ -2405,11 +2399,6 @@ unified@^9.1.0:
     is-plain-obj "^2.0.0"
     trough "^1.0.0"
     vfile "^4.0.0"
-
-uniq@^1.0.1:
-  version "1.0.1"
-  resolved "https://registry.yarnpkg.com/uniq/-/uniq-1.0.1.tgz#b31c5ae8254844a3a8281541ce2b04b865a734ff"
-  integrity sha1-sxxa6CVIRKOoKBVBzisEuGWnNP8=
 
 unist-util-find-all-after@^3.0.2:
   version "3.0.2"
