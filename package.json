@@ -24,7 +24,7 @@
     "stylelint": "13.13.1",
     "stylelint-config-prettier": "9.0.3",
     "stylelint-config-standard": "22.0.0",
-    "stylelint-order": "4.1.0",
+    "stylelint-order": "5.0.0",
     "stylelint-prettier": "1.2.0",
     "stylelint-scss": "3.21.0",
     "vanilla-framework": "2.37.1",
