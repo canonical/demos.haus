@@ -82,7 +82,10 @@ def github_demo_webhook():
     repo = ghub.repository(repo_owner, repo_name)
 
     # Only trigger builds if PR author is a collaborator
-    if not repo.is_collaborator(author):
+    allowed_bots = ["renovate[bot]", "dependabot[bot]"]
+    allowed = author in allowed_bots or repo.is_collaborator(author)
+    
+    if not allowed:
         message = f"{author} is not a collaborator of the repo"
 
         # If the PR was opened post the error message
