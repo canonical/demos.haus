@@ -82,7 +82,7 @@ def github_demo_webhook():
     repo = ghub.repository(repo_owner, repo_name)
 
     # Only trigger builds if PR author is a collaborator
-    allowed_bots = ["renovate[bot]", "dependabot[bot]"]
+    allowed_bots = ["renovate[bot]", "dependabot[bot]", "github-actions[bot]"]
     allowed = author in allowed_bots or repo.is_collaborator(author)
     
     if not allowed:
