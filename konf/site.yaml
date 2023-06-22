@@ -1,5 +1,5 @@
 domain: demos.haus
-image: prod-web-team-demos.docker-registry.canonical.com/demos.haus
+image: prod-comms.ps5.docker-registry.canonical.com/demos.haus
 
 env:
   - name: SENTRY_DSN
