@@ -19,9 +19,20 @@ def get_running_demos():
     demos = []
     for ingress in ingresses.items:
         if ingress.metadata.name not in ["demos-haus", "tools-demos-haus"]:
-            demos.append({
-                "name": ingress.metadata.name,
-                "host": f"https://{ingress.spec.rules[0].host}"
-            })
+            demos.append(
+                {
+                    "name": ingress.metadata.name,
+                    "host": f"https://{ingress.spec.rules[0].host}",
+                    "pr_url": get_pr_url(ingress.metadata.labels),
+                    "start_time": ingress.metadata.creation_timestamp,
+                }
+            )
 
     return demos
+
+
+def get_pr_url(labels):
+    try:
+        return f"https://github.com/{labels['github.org']}/{labels['github.repo']}/pull/{labels['github.pr']}"
+    except KeyError:
+        return ""

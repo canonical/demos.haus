@@ -61,15 +61,19 @@
             <table>
             <thead>
               <tr>
-                <th>Name</th>	    	
-                <th>Host</th>	    	
+                <th>Name</th>
+                <th>Host</th>
+                <th>PR</th>
+                <th>Start time</th>
               </tr>
             </thead>
             {% for demo in demos %}
           <tbody>
             <tr>
-              <td>{{demo.name}}</td>	    	
-              <td><a href="{{demo.host}}">{{demo.host}}</a></td>	    	
+              <td>{{demo.name}}</td>
+              <td><a href="{{demo.host}}">{{demo.host}}</a></td>
+              <td><a href="{{demo.pr_url}}">{{demo.pr_url}}</a></td>
+              <td>{{demo.start_time}}</td>
             </tr>
             {% endfor %}
             </tbody>
