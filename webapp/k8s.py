@@ -12,8 +12,6 @@ if in_k8s_cluster:
 else:
     config.load_kube_config()
 
-
-# extensionsv1 = client.ExtensionsV1beta1Api()
 api = client.AppsV1Api()
 corev1 = client.CoreV1Api()
 netv1 = client.NetworkingV1Api()

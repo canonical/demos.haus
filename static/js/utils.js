@@ -70,6 +70,7 @@ function addSpinner() {
         button.classList.remove(processingClass);
         spinner.classList.add(hideClass);
         buttonLabel.classList.remove(hideClass);
+        location.reload();
       }, 6000);
     });
   });
