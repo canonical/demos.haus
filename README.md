@@ -22,14 +22,14 @@ This first required me to install PyEnv, to get the right Python version (it won
 
 Once it's installed, get Python 3.9:
 
-``` bash
+```bash
 pyenv install 3.9.13
 pyenv local 3.9.13
 ```
 
 Setup the Python environment:
 
-``` bash
+```bash
 python3 -m venv env3
 source env3/bin/activate
 pip3 install -U setuptools
@@ -38,6 +38,12 @@ pip3 install -r requirements.txt
 
 Then run the project - replace all `{SOMETHING}` variables:
 
-``` bash
+```bash
 SECRET_KEY=whatever GITHUB_WEBHOOK_SECRET={WEBHOOK_SECRET} GITHUB_ACCESS_TOKEN={GITHUB_TOKEN} JENKINS_TOKEN={JENKINS_TOKEN} JENKINS_URL=https://jenkins.canonical.com/webteam KUBECONFIG=~/.kube/config ./entrypoint 0.0.0.0:8100
+```
+
+If you only intend to make modifications affecting the kubernetes pods, the following should work
+
+```bash
+KUBECONFIG=~/.kube/config ./entrypoint 0.0.0.0:8100
 ```
