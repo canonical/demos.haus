@@ -1,13 +1,14 @@
-import flask
-import os
 import hmac
+import os
 import requests
 from hashlib import sha1
 
+import flask
+import gevent
 from canonicalwebteam.flask_base.app import FlaskBase
 from github3 import login
 
-from webapp.k8s import get_running_demos
+from webapp.k8s import get_running_demos, filter_demos_by_name, update_pod_state
 from webapp.sso import init_sso, login_required
 
 # Get required values from env or fail
@@ -54,9 +55,12 @@ def validate_github_webhook_signature(payload, signature):
 
 
 @app.route("/")
-@login_required
+# @login_required
 def index():
+    query = flask.request.args.get("search")
     demos = get_running_demos()
+    if query:
+        demos = filter_demos_by_name(demos, query)
     return flask.render_template("index.html", demos=demos)
 
 
@@ -129,3 +133,10 @@ def github_demo_webhook():
         issue.create_comment(comment)
 
     return flask.jsonify({"message": "Webhook handled"}, 200)
+
+@app.route("/update", methods=["GET"])
+def update():
+    state = flask.request.args.get("state")
+    pod_name = flask.request.args.get("pod")
+    gevent.spawn(update_pod_state(state, pod_name))
+    return "OK"

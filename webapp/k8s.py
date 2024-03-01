@@ -1,4 +1,6 @@
 import os
+import re
+from datetime import datetime, timezone
 from distutils.util import strtobool
 
 from kubernetes import config, client
@@ -11,24 +13,89 @@ else:
     config.load_kube_config()
 
 
-extensionsv1 = client.ExtensionsV1beta1Api()
+# extensionsv1 = client.ExtensionsV1beta1Api()
+api = client.AppsV1Api()
+corev1 = client.CoreV1Api()
+netv1 = client.NetworkingV1Api()
 
 
 def get_running_demos():
-    ingresses = extensionsv1.list_namespaced_ingress("default", watch=False)
+    deployments = api.list_namespaced_deployment(namespace="default", watch=False)
+
     demos = []
-    for ingress in ingresses.items:
-        if ingress.metadata.name not in ["demos-haus", "tools-demos-haus"]:
+    for deployment in deployments.items:
+        if (
+            deployment.metadata.name
+            not in [
+                "demos-haus",
+                "tools-demos-haus",
+            ]
+            and deployment.metadata.labels
+        ):
+
             demos.append(
                 {
-                    "name": ingress.metadata.name,
-                    "host": f"https://{ingress.spec.rules[0].host}",
-                    "pr_url": get_pr_url(ingress.metadata.labels),
-                    "start_time": ingress.metadata.creation_timestamp,
+                    "name": deployment.metadata.name,
+                    "host": f"https://{deployment.metadata.labels.get('app')}",
+                    "pr_url": get_pr_url(deployment.metadata.labels),
+                    "running_time": get_time_delta(
+                        deployment.metadata.creation_timestamp
+                    ),
+                    "status": get_status(deployment.status.conditions),
                 }
             )
 
     return demos
+
+
+def get_time_delta(start_time):
+    now = datetime.now().replace(tzinfo=timezone.utc)
+    seconds = (now - start_time).seconds
+
+    minutes = seconds // 60
+    hours = seconds // 3600
+    days = seconds // 86400
+    weeks = seconds // 604800
+
+    if weeks:
+        return f"{weeks} w"
+    elif days:
+        return f"{days} d"
+    elif hours:
+        return f"{hours} h"
+    elif minutes:
+        return f"{minutes} m"
+    else:
+        return f"{seconds} s"
+
+
+def get_status(conditions):
+    status = sorted(conditions, key=lambda x: x.last_transition_time, reverse=True)[0]
+    if status.type == "Available":
+        return 0
+    elif status.type == "Progressing" and status.status == "True":
+        return 1
+    return 2
+
+
+def filter_demos_by_name(demos, name):
+    def matches(query, demo):
+        return re.search(query, demo["name"], re.IGNORECASE)
+
+    return (demo for demo in demos if matches(name, demo))
+
+
+def update_pod_state(state, pod_name):
+    if state == "delete":
+        corev1.delete_namespaced_service(pod_name, "default")
+        netv1.delete_namespaced_ingress(pod_name, "default")
+        api.delete_namespaced_deployment(pod_name, "default")
+    elif state == "restart":
+        name = pod_name.replace("-demos-haus", ".demos.haus")
+        pod = corev1.list_namespaced_pod(
+            "default", watch=False, label_selector=f"app={name}"
+        ).items[0]
+        corev1.delete_namespaced_pod(pod.metadata.name, "default")
 
 
 def get_pr_url(labels):

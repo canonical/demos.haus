@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 
 <html lang="en" dir="ltr">
   <head>
@@ -7,31 +7,64 @@
 
     <!-- Add meta name below -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    
+
     <!-- Add page title below -->
     <title>Demoservice</title>
-    
+
     <!-- Add preconnect/dns-prefetch below -->
-    <link rel="preconnect" href="https://assets.ubuntu.com">
+    <link rel="preconnect" href="https://assets.ubuntu.com" />
     <!-- <link rel="dns-prefetch" href="http://www.spreadfirefox.com/"> -->
-    
+
     <!-- Add inline JS below -->
-    <script>// Inline JS</script>
-    
+    <script>
+      // Inline JS
+    </script>
+
     <!-- Add stylesheet below -->
-    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/styles.css" />
-    
+    <link
+      rel="stylesheet"
+      type="text/css"
+      media="screen"
+      href="/static/css/styles.css"
+    />
+
     <!-- Add inline CSS below -->
-    <style>/* Inline CSS */</style>
-    
+    <style>
+      /* Inline CSS */
+    </style>
+
     <!-- Add preload below -->
-    <link rel="preload" as="font" type="font/woff2" href="https://assets.ubuntu.com/v1/e8c07df6-Ubuntu-L_W.woff2" crossorigin>
-    <link rel="preload" as="font" type="font/woff2" href="https://assets.ubuntu.com/v1/7f100985-Ubuntu-Th_W.woff2" crossorigin>
-    <link rel="preload" as="font" type="font/woff2" href="https://assets.ubuntu.com/v1/f8097dea-Ubuntu-LI_W.woff2" crossorigin>
-    <link rel="preload" as="font" type="font/woff2" href="https://assets.ubuntu.com/v1/fff37993-Ubuntu-R_W.woff2" crossorigin>
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="https://assets.ubuntu.com/v1/e8c07df6-Ubuntu-L_W.woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="https://assets.ubuntu.com/v1/7f100985-Ubuntu-Th_W.woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="https://assets.ubuntu.com/v1/f8097dea-Ubuntu-LI_W.woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="https://assets.ubuntu.com/v1/fff37993-Ubuntu-R_W.woff2"
+      crossorigin
+    />
 
     <!-- Add script below -->
-    <!-- <script src=""></script> -->
+    <script src="/static/js/utils.js"></script>
 
     <!-- Add prefetch/prerender below -->
     <!-- <link rel="prefetch" href="/style.css" as="style" />
@@ -44,41 +77,163 @@
       <!-- Add main content below -->
       <div class="p-strip--dark">
         <div class="u-fixed-width">
-	    	<h1>Demoservice</h1>
+          <h1>Demoservice</h1>
         </div>
       </div>
       <div class="p-strip is-shallow">
         <div class="row">
-          <h1 class="p-heading--3"> Jenkins Jobs</h1>
-          <a href="https://jenkins.canonical.com/webteam/securityRealm/commenceLogin?from=%2Fwebteam%2Fview%2Fdemos%2Fjob%2Fstart-demo%2Fbuild">Start demo</a>
-          <a href="https://jenkins.canonical.com/webteam/securityRealm/commenceLogin?from=%2Fwebteam%2Fview%2Fdemos%2Fjob%2Fstop-demo%2Fbuild">Stop demo</a>
+          <h1 class="p-heading--3">Jenkins Jobs</h1>
+          <a
+            href="https://jenkins.canonical.com/webteam/securityRealm/commenceLogin?from=%2Fwebteam%2Fview%2Fdemos%2Fjob%2Fstart-demo%2Fbuild"
+            >Start demo</a
+          >
+          <a
+            href="https://jenkins.canonical.com/webteam/securityRealm/commenceLogin?from=%2Fwebteam%2Fview%2Fdemos%2Fjob%2Fstop-demo%2Fbuild"
+            >Stop demo</a
+          >
         </div>
       </div>
-      <div  class="p-strip">
+      <div class="p-strip">
         <div class="row">
-        <h1 class="p-heading--3">Running demos</h1>
-          <div class="u-fixed-width">
-            <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Host</th>
-                <th>PR</th>
-                <th>Start time</th>
-              </tr>
-            </thead>
-            {% for demo in demos %}
-          <tbody>
-            <tr>
-              <td>{{demo.name}}</td>
-              <td><a href="{{demo.host}}">{{demo.host}}</a></td>
-              <td><a href="{{demo.pr_url}}">{{demo.pr_url}}</a></td>
-              <td>{{demo.start_time}}</td>
-            </tr>
-            {% endfor %}
-            </tbody>
-            </table>
+          <h1 class="p-heading--3">Running demos</h1>
+          <form class="p-search-box">
+            <label class="u-off-screen" for="search">Search</label>
+            <input
+              type="search"
+              id="search"
+              class="p-search-box__input"
+              name="search"
+              placeholder="Search"
+              required=""
+              autocomplete="on"
+            />
+            <button type="reset" class="p-search-box__reset">
+              <i class="p-icon--close">Close</i>
+            </button>
+            <button type="submit" class="p-search-box__button">
+              <i class="p-icon--search">Search</i>
+            </button>
+          </form>
+        </div>
+        <div class="row">
+          {% for demo in demos %}
+
+          <div class="p-card">
+            <div
+              style="
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+              "
+            >
+              <div
+                data-status="{{demo.status}}"
+                class="status-id-1"
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                "
+              ></div>
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                "
+              >
+                <p class="p-heading--4">{{demo.running_time}}</p>
+              </div>
+            </div>
+            <div
+              style="
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                "
+              >
+                <a><h3>{{demo.name}}</h3></a>
+              </div>
+            </div>
+
+            <div
+              style="
+                display: flex;
+                flex-direction: row;
+                align-items: center;
+                justify-content: space-between;
+              "
+            >
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                "
+              >
+                <div class="p-chip">
+                  <a href="{{demo.pr_url}}">
+                    <img
+                      height="32"
+                      width="32"
+                      src="static/images/gh.png"
+                      alt="{{ demo.name }}"
+                    />
+                  </a>
+                </div>
+                <div class="p-chip">
+                  <a href="{{demo.host}}">
+                    <img
+                      height="32"
+                      width="32"
+                      src="static/images/jenkins.png"
+                      alt="{{ demo.name }}"
+                    />
+                  </a>
+                </div>
+              </div>
+              <div
+                style="
+                  display: flex;
+                  align-items: center;
+                  justify-content: center;
+                "
+              >
+                <button
+                  data-button-status="{{demo.status}}"
+                  onclick="updateState('delete', '{{ demo.name }}')"
+                  class="p-button--negative js-processing-button"
+                  disabled="false"
+                >
+                  <i
+                    class="p-icon--spinner u-animation--spin is-light u-hide"
+                  ></i>
+                  <span id="button-label">Stop demo</span>
+                </button>
+                <button
+                  data-button-status="{{ demo.status }}"
+                  onclick="updateState('restart', '{{ demo.name }}')"
+                  class="p-button--positive js-processing-button"
+                  disabled=""
+                >
+                  <i
+                    class="p-icon--spinner u-animation--spin is-light u-hide"
+                  ></i>
+                  <span id="button-label">Start demo</span>
+                </button>
+              </div>
+            </div>
           </div>
+          {% endfor %}
         </div>
       </div>
     </main>
