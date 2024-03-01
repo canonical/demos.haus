@@ -55,7 +55,7 @@ def validate_github_webhook_signature(payload, signature):
 
 
 @app.route("/")
-# @login_required
+@login_required
 def index():
     query = flask.request.args.get("search")
     demos = get_running_demos()
@@ -135,6 +135,7 @@ def github_demo_webhook():
     return flask.jsonify({"message": "Webhook handled"}, 200)
 
 @app.route("/update", methods=["GET"])
+@login_required
 def update():
     state = flask.request.args.get("state")
     pod_name = flask.request.args.get("pod")
