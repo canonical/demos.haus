@@ -38,7 +38,7 @@ COPY --from=python-dependencies /root/.local/bin /root/.local/bin
 # Import code, build assets
 COPY . .
 RUN rm -rf package.json yarn.lock .babelrc webpack.config.js requirements.txt
-COPY --from=build /srv/static/css static/css
+COPY --from=build /srv/static static
 
 # Set build ID
 ARG BUILD_ID
