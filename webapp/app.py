@@ -4,11 +4,15 @@ import requests
 from hashlib import sha1
 
 import flask
-import gevent
 from canonicalwebteam.flask_base.app import FlaskBase
 from github3 import login
 
-from webapp.k8s import get_running_demos, filter_demos_by_name, update_pod_state
+from webapp.k8s import (
+    get_running_demos,
+    get_pod_status,
+    filter_demos_by_name,
+    update_pod_state,
+)
 from webapp.sso import init_sso, login_required
 
 # Get required values from env or fail
@@ -57,11 +61,7 @@ def validate_github_webhook_signature(payload, signature):
 @app.route("/")
 @login_required
 def index():
-    query = flask.request.args.get("search")
-    demos = get_running_demos()
-    if query:
-        demos = filter_demos_by_name(demos, query)
-    return flask.render_template("index.html", demos=demos)
+    return flask.render_template("index.html")
 
 
 @app.route("/hook/gh", methods=["POST"])
@@ -134,10 +134,34 @@ def github_demo_webhook():
 
     return flask.jsonify({"message": "Webhook handled"}, 200)
 
-@app.route("/update", methods=["GET"])
+
+@app.route("/demos", methods=["GET"])
 @login_required
-def update():
+def demos():
+    return flask.jsonify(get_running_demos())
+
+
+@app.route("/demo/search")
+@login_required
+def search():
+    query = flask.request.args.get("query")
+    demos = get_running_demos()
+    if query:
+        demos = filter_demos_by_name(demos, query)
+    return flask.jsonify(demos)
+
+
+@app.route("/demo/status", methods=["GET"])
+@login_required
+def demo_status():
+    pod_name = flask.request.args.get("name")
+    return flask.jsonify(get_pod_status(pod_name))
+
+
+@app.route("/demo/update", methods=["GET"])
+@login_required
+def update_demo():
     state = flask.request.args.get("state")
-    pod_name = flask.request.args.get("pod")
-    gevent.spawn(update_pod_state(state, pod_name))
-    return "OK"
+    pod_name = flask.request.args.get("name")
+    update_pod_state(state, pod_name)
+    return flask.jsonify({"message": "Pod state updated"})

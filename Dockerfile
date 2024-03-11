@@ -15,10 +15,10 @@ WORKDIR /srv
 COPY . .
 RUN --mount=type=cache,target=/usr/local/share/.cache/yarn yarn install
 
-# Build stage: Run "yarn run build-css"
+# Build stage: Run "yarn run build"
 # ===
-FROM yarn-dependencies AS build-css
-RUN yarn run build-css
+FROM yarn-dependencies AS build
+RUN yarn run build
 
 # Build the production image
 # ===
@@ -38,7 +38,7 @@ COPY --from=python-dependencies /root/.local/bin /root/.local/bin
 # Import code, build assets
 COPY . .
 RUN rm -rf package.json yarn.lock .babelrc webpack.config.js requirements.txt
-COPY --from=build-css /srv/static/css static/css
+COPY --from=build /srv/static/css static/css
 
 # Set build ID
 ARG BUILD_ID

@@ -96,6 +96,14 @@ def update_pod_state(state, pod_name):
         corev1.delete_namespaced_pod(pod.metadata.name, "default")
 
 
+def get_pod_status(pod_name):
+    name = pod_name.replace("-demos-haus", ".demos.haus")
+    pod = corev1.list_namespaced_pod(
+        "default", watch=False, label_selector=f"app={name}"
+    ).items[0]
+    return pod.status.phase
+
+
 def get_pr_url(labels):
     try:
         return f"https://github.com/{labels['github.org']}/{labels['github.repo']}/pull/{labels['github.pr']}"
