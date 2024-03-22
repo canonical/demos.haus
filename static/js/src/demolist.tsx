@@ -1,85 +1,69 @@
-import React, { useState } from "react";
+import React from "react";
 import ReactDOM from "react-dom";
+import DemoSearch from "./demoSearch";
+import { DemoUpdateStates, DemoService, DemoStates } from "./types";
 
-interface DemoService {
-  name: string;
-  status: number;
-  running_time: string;
-  pr_url: string;
-  host: string;
-}
-
-enum DemoUpdateStates {
-  RESTART = "restart",
-  DELETE = "delete",
-}
-
-enum CardStates {
-  RUNNING = 0,
-  BUILDING = 1,
-  FAILED = 2,
-}
-
-const CardStatus = (status: CardStates) => {
-  if (status === CardStates.RUNNING) {
-    return <div class="p-status-label--positive">Running</div>;
-  } else if (status === CardStates.BUILDING) {
-    return <div class="p-status-label--caution">Builing</div>;
-  } else if (status === CardStates.FAILED) {
-    return <div class="p-status-label--negative">Failed</div>;
+const CardStatus = (status: DemoStates) => {
+  if (status === DemoStates.RUNNING) {
+    return <div className="p-status-label--positive">Running</div>;
+  } else if (status === DemoStates.BUILDING) {
+    return <div className="p-status-label--caution">Builing</div>;
+  } else if (status === DemoStates.FAILED) {
+    return <div className="p-status-label--negative">Failed</div>;
   }
+  return <div className="p-status-label">Unknown</div>;
 };
 
 const DemoButton = (props: {
   name: string;
-  type: DemoUpdateStates;
-  onClick: (name: string, type: DemoUpdateStates) => void;
+  updateState: DemoUpdateStates;
+  onClick: (name: string, updateState: DemoUpdateStates) => Promise<void>;
+  disabled?: boolean;
 }) => {
-  const [isLoading, setIsLoading] = useState(false);
+  const [isLoading, setIsLoading] = React.useState(false);
 
   const handleClick = () => {
-    // setIsLoading(true);
-    setTimeout(() => {
-      console.log("Demo updated");
-    }, 5000);
-    // props.onClick(props.name, props.type);
-    setIsLoading(false);
+    setIsLoading(true);
+
+    props.onClick(props.name, props.updateState).then(() => {
+      setIsLoading(false);
+    });
   };
 
-  React.useEffect(() => {
-    if (isLoading) {
-      console.log("SHOULD REFRESH");
-    }
-  }, [isLoading]);
-
+  if (isLoading) {
+    return (
+      <span id="button-label">
+        <i className="p-icon--spinner u-animation--spin is-light"></i>
+      </span>
+    );
+  }
   return (
     <button
-      class={`${
-        props.type == DemoUpdateStates.DELETE
+      className={`${
+        props.updateState == DemoUpdateStates.DELETE
           ? "p-button--negative"
           : "p-button--positive"
       } js-processing-button`}
       onClick={handleClick}
+      disabled={props.disabled}
     >
-      {isLoading ? (
-        <i class="p-icon--spinner u-animation--spin is-light"></i>
-      ) : (
-        <span id="button-label">
-          {props.type == DemoUpdateStates.DELETE ? "Stop demo" : "Restart demo"}
-        </span>
-      )}
+      <span id="button-label">
+        {props.updateState == DemoUpdateStates.DELETE
+          ? "Stop demo"
+          : "Restart demo"}
+      </span>
     </button>
   );
 };
 
 const DemoCard = (props: {
   demo: DemoService;
-  handleSubmit: (name: string, state: DemoUpdateStates) => void;
+  handleSubmit: (name: string, state: DemoUpdateStates) => Promise<void>;
 }) => {
   const { demo, handleSubmit } = props;
 
   return (
-    <div class="p-card">
+    <div className="p-card">
       <div
         style={{
           display: "flex",
@@ -89,7 +73,6 @@ const DemoCard = (props: {
         }}
       >
         <div
-          class="status-id-1"
           style={{
             display: "flex",
             alignItems: "center",
@@ -105,7 +88,7 @@ const DemoCard = (props: {
             justifyContent: "center",
           }}
         >
-          <p class="p-heading--4">{demo.running_time}</p>
+          <p className="p-heading--4">{demo.running_time}</p>
         </div>
       </div>
       <div
@@ -144,7 +127,7 @@ const DemoCard = (props: {
             justifyContent: "center",
           }}
         >
-          <div class="p-chip">
+          <div className="p-chip">
             <a href={demo.pr_url}>
               <img
                 height="32"
@@ -154,7 +137,7 @@ const DemoCard = (props: {
               />
             </a>
           </div>
-          <div class="p-chip">
+          <div className="p-chip">
             <a href={demo.host}>
               <img
                 height="32"
@@ -174,13 +157,15 @@ const DemoCard = (props: {
         >
           <DemoButton
             name={demo.name}
-            type={DemoUpdateStates.DELETE}
+            updateState={DemoUpdateStates.DELETE}
             onClick={handleSubmit}
+            disabled={demo.status === DemoStates.FAILED}
           />
           <DemoButton
             name={demo.name}
-            type={DemoUpdateStates.RESTART}
+            updateState={DemoUpdateStates.RESTART}
             onClick={handleSubmit}
+            disabled={demo.status === DemoStates.RUNNING}
           />
         </div>
       </div>
@@ -192,6 +177,7 @@ function App() {
   const [demos, setDemos] = React.useState([]);
   const [demosList, setDemosList] = React.useState([]);
   const [searchInput, setSearchInput] = React.useState("");
+  const [filterCache, setFilterCache] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
 
   const getDemos = () => {
@@ -207,21 +193,25 @@ function App() {
   const handleUpdateDemoStatus = (name: string, state: DemoUpdateStates) => {
     return fetch(`/demo/update?name=${name}&state=${state}`).then(() => {
       getDemoStatus(name).then((status) => {
+        let updatedDemos = demosList.map((demo: DemoService) => {
+          if (demo.name === name) {
+            return { ...demo, status: status };
+          }
+          return demo;
+        });
         // Update the demo in the list
-        setDemos(
-          demos.map((demo: DemoService) => {
-            if (demo.name === name) {
-              return { ...demo, status: status };
-            }
-            return demo;
-          })
-        );
+        setDemosList(updatedDemos);
       });
     });
   };
 
   const handleSearch = (query: string) => {
     setDemosList(demos.filter((demo) => demo.name.includes(query)));
+    setFilterCache(demosList); // Cache the filtered list
+  };
+
+  const handleFilter = (query: string, filterKey: keyof DemoService) => {
+    setDemosList(filterCache.filter((demo) => demo[filterKey].includes(query)));
   };
 
   React.useEffect(() => {
@@ -248,36 +238,19 @@ function App() {
   }, [searchInput]);
 
   return (
-    <div class="p-strip">
-      <div class="row">
-        <h1 class="p-heading--3">Running demos</h1>
-        <form class="p-search-box">
-          <label class="u-off-screen" for="search">
-            Search
-          </label>
-          <input
-            type="search"
-            id="search"
-            class="p-search-box__input"
-            name="search"
-            placeholder="Search"
-            required=""
-            autocomplete="on"
-            onChange={(e) => setSearchInput(e.target.value)}
-            value={searchInput}
-          />
-          <button type="reset" class="p-search-box__reset">
-            <i class="p-icon--close">Close</i>
-          </button>
-          <button type="submit" class="p-search-box__button">
-            <i class="p-icon--search">Search</i>
-          </button>
-        </form>
+    <div className="p-strip">
+      <div className="row">
+        <h1 className="p-heading--3">Running demos</h1>
+        <DemoSearch
+          value={searchInput}
+          onChange={setSearchInput}
+          onFilter={handleFilter}
+        />
       </div>
-      <div class="row">
+      <div className="row">
         {isLoading ? (
-          <div class="u-align--center">
-            <i class="p-icon--spinner u-animation--spin"></i>
+          <div className="u-align--center p-strip">
+            <i className="p-icon--spinner u-animation--spin"></i>
           </div>
         ) : (
           demosList.map((demo: DemoService) => {

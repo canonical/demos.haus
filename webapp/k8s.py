@@ -70,10 +70,10 @@ def get_time_delta(start_time):
 def get_status(conditions):
     status = sorted(conditions, key=lambda x: x.last_transition_time, reverse=True)[0]
     if status.type == "Available":
-        return 0
+        return "running"
     elif status.type == "Progressing" and status.status == "True":
-        return 1
-    return 2
+        return "building"
+    return "failed"
 
 
 def filter_demos_by_name(demos, name):
@@ -96,12 +96,9 @@ def update_pod_state(state, pod_name):
         corev1.delete_namespaced_pod(pod.metadata.name, "default")
 
 
-def get_pod_status(pod_name):
-    name = pod_name.replace("-demos-haus", ".demos.haus")
-    pod = corev1.list_namespaced_pod(
-        "default", watch=False, label_selector=f"app={name}"
-    ).items[0]
-    return pod.status.phase
+def get_deployment_status(name):
+    deployment = api.read_namespaced_deployment(name, "default")
+    return get_status(deployment.status.conditions)
 
 
 def get_pr_url(labels):
