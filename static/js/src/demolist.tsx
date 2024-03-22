@@ -32,9 +32,16 @@ const DemoButton = (props: {
 
   if (isLoading) {
     return (
-      <span id="button-label">
-        <i className="p-icon--spinner u-animation--spin is-light"></i>
-      </span>
+      <button
+        disabled=""
+        class={`${
+          props.updateState == DemoUpdateStates.DELETE
+            ? "p-button--negative"
+            : "p-button--positive"
+        } is-processing`}
+      >
+        <i class="p-icon--spinner u-animation--spin is-light"></i>
+      </button>
     );
   }
   return (
