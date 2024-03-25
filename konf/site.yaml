@@ -27,5 +27,10 @@ env:
     secretKeyRef:
       key: demos-webook-secret
       name: github
+  
+  - NAME: JENKINS_PUBLIC_URL
+    secretKeyRef:
+      key: public_url
+      name: webteam-jenkins
 demo:
   replicas: 1
