@@ -125,6 +125,7 @@ def github_demo_webhook():
         comment = f"""
             ### [<img src='https://assets.ubuntu.com/v1/6baef514-ubuntu-circle-of-friends-large.svg' height=32 width=32> Demo</img>]({demo_url})
             ### [<img src='https://assets.ubuntu.com/v1/e512b0e2-jenkins.svg' height=32 width=32> Jenkins </img>]({jenkins_url})
+            ### [<img src='https://assets.ubuntu.com/v1/7144ec6d-logo-jaas-icon.svg' height=32 width=32> demos.haus </img>](https://demos.haus)
         """
 
         issue.create_comment(comment)
