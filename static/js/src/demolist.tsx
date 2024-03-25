@@ -198,18 +198,27 @@ function App() {
   };
 
   const handleUpdateDemoStatus = (name: string, state: DemoUpdateStates) => {
-    return fetch(`/demo/update?name=${name}&state=${state}`).then(() => {
-      getDemoStatus(name).then((status) => {
-        let updatedDemos = demosList.map((demo: DemoService) => {
-          if (demo.name === name) {
-            return { ...demo, status: status };
-          }
-          return demo;
-        });
-        // Update the demo in the list
-        setDemosList(updatedDemos);
+    return fetch(`/demo/update?name=${name}&state=${state}`)
+      .then((response) => response.json())
+      .then((data) => {
+        // Remove the demo from the list
+        if (data.state === DemoUpdateStates.DELETE) {
+          setDemosList(
+            demosList.filter((demo: DemoService) => demo.name !== name)
+          );
+        } else {
+          // Update the demo in the list
+          getDemoStatus(name).then((status) => {
+            let updatedDemos = demosList.map((demo: DemoService) => {
+              if (demo.name === name) {
+                return { ...demo, status: status };
+              }
+              return demo;
+            });
+            setDemosList(updatedDemos);
+          });
+        }
       });
-    });
   };
 
   const handleSearch = (query: string) => {
@@ -230,14 +239,13 @@ function App() {
   }, []);
 
   React.useEffect(() => {
-    // Refresh the list of demos every 5 seconds
-    const timeout = setTimeout(() => {
+    // Refresh the list of demos every 10 seconds
+    const interval = setInterval(() => {
       getDemos().then((data) => {
         setDemos(data);
       });
-    }, 5 * 1000);
-
-    return () => clearTimeout(timeout);
+    }, 10 * 1000);
+    return () => clearTimeout(interval);
   }, []);
 
   React.useEffect(() => {

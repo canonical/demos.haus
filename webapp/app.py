@@ -164,4 +164,4 @@ def update_demo():
     state = flask.request.args.get("state")
     pod_name = flask.request.args.get("name")
     update_pod_state(state, pod_name)
-    return flask.jsonify({"message": "Pod state updated"})
+    return flask.jsonify({"message": "Pod state updated", "state": state})

@@ -1,5 +1,6 @@
 import os
 import re
+from contextlib import suppress
 from datetime import datetime, timezone
 from distutils.util import strtobool
 
@@ -85,15 +86,20 @@ def filter_demos_by_name(demos, name):
 
 def update_pod_state(state, pod_name):
     if state == "delete":
-        corev1.delete_namespaced_service(pod_name, "default")
-        netv1.delete_namespaced_ingress(pod_name, "default")
-        api.delete_namespaced_deployment(pod_name, "default")
+        # Silence errors if any of the resources are not found.
+        with suppress(client.ApiException):
+            corev1.delete_namespaced_service(pod_name, "default")
+        with suppress(client.ApiException):
+            netv1.delete_namespaced_ingress(pod_name, "default")
+        with suppress(client.ApiException):
+            api.delete_namespaced_deployment(pod_name, "default")
     elif state == "restart":
         name = pod_name.replace("-demos-haus", ".demos.haus")
         pod = corev1.list_namespaced_pod(
             "default", watch=False, label_selector=f"app={name}"
         ).items[0]
-        corev1.delete_namespaced_pod(pod.metadata.name, "default")
+        with suppress(client.ApiException):
+            corev1.delete_namespaced_pod(pod.metadata.name, "default")
 
 
 def get_deployment_status(name):
