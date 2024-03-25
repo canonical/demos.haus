@@ -122,11 +122,9 @@ def github_demo_webhook():
         demo_url = f"https://{repo_name.replace('.', '-')}-{pull_request}.demos.haus"
         jenkins_url = f"{JENKINS_PUBLIC_URL}/job/{jenkins_job}/"
 
-        comment = f"""
-        ### [<img src='https://assets.ubuntu.com/v1/6baef514-ubuntu-circle-of-friends-large.svg' height=32 width=32> Demo</img>]({demo_url})\n
-        ### [<img src='https://assets.ubuntu.com/v1/e512b0e2-jenkins.svg' height=32 width=32> Jenkins </img>]({jenkins_url})\n
-        ### [<img src='https://assets.ubuntu.com/v1/7144ec6d-logo-jaas-icon.svg' height=32 width=32> demos.haus </img>](https://demos.haus)\n
-        """
+        comment = f"### [<img src='https://assets.ubuntu.com/v1/6baef514-ubuntu-circle-of-friends-large.svg' height=32 width=32> Demo</img>]({demo_url})\n"
+        comment += f"### [<img src='https://assets.ubuntu.com/v1/e512b0e2-jenkins.svg' height=32 width=32> Jenkins </img>]({jenkins_url})\n"
+        comment += "### [<img src='https://assets.ubuntu.com/v1/7144ec6d-logo-jaas-icon.svg' height=32 width=32> demos.haus </img>](https://demos.haus)\n"
 
         issue.create_comment(comment)
 
