@@ -105,7 +105,9 @@ def github_demo_webhook():
         )
 
     jenkins_job_params = f"token={JENKINS_TOKEN}&PR_URL={pull_request_url}"
-    remote_build_url = f"http://{JENKINS_URL}/{jenkins_job}/buildWithParameters?{jenkins_job_params}"
+    remote_build_url = (
+        f"http://{JENKINS_URL}/{jenkins_job}/buildWithParameters?{jenkins_job_params}"
+    )
 
     # Trigger the build in jenkins
     if not app.debug:
@@ -117,15 +119,13 @@ def github_demo_webhook():
 
     # If the PR was opened post the the link to the demo
     if action == "opened":
-        demo_url = (
-            f"https://{repo_name.replace('.', '-')}-{pull_request}.demos.haus"
-        )
+        demo_url = f"https://{repo_name.replace('.', '-')}-{pull_request}.demos.haus"
         jenkins_url = f"{JENKINS_PUBLIC_URL}/job/{jenkins_job}/"
 
         comment = f"""
-            ### [<img src='https://assets.ubuntu.com/v1/6baef514-ubuntu-circle-of-friends-large.svg' height=32 width=32> Demo</img>]({demo_url})
-            ### [<img src='https://assets.ubuntu.com/v1/e512b0e2-jenkins.svg' height=32 width=32> Jenkins </img>]({jenkins_url})
-            ### [<img src='https://assets.ubuntu.com/v1/7144ec6d-logo-jaas-icon.svg' height=32 width=32> demos.haus </img>](https://demos.haus)
+        ### [<img src='https://assets.ubuntu.com/v1/6baef514-ubuntu-circle-of-friends-large.svg' height=32 width=32> Demo</img>]({demo_url})
+        ### [<img src='https://assets.ubuntu.com/v1/e512b0e2-jenkins.svg' height=32 width=32> Jenkins </img>]({jenkins_url})
+        ### [<img src='https://assets.ubuntu.com/v1/7144ec6d-logo-jaas-icon.svg' height=32 width=32> demos.haus </img>](https://demos.haus)
         """
 
         issue.create_comment(comment)
