@@ -117,10 +117,13 @@ def github_demo_webhook():
         # In debug mode just print the URL
         print(remote_build_url)
 
+    # Get the id of the demo
+    job_id = response.headers.get("Location").split("/")[-2]
+
     # If the PR was opened post the the link to the demo
     if action == "opened":
         demo_url = f"https://{repo_name.replace('.', '-')}-{pull_request}.demos.haus"
-        jenkins_url = f"{JENKINS_PUBLIC_URL}/job/{jenkins_job}/"
+        jenkins_url = f"{JENKINS_PUBLIC_URL}/{jenkins_job}/{job_id}"
 
         comment = f"### [<img src='https://assets.ubuntu.com/v1/6baef514-ubuntu-circle-of-friends-large.svg' height=32 width=32> Demo</img>]({demo_url})\n"
         comment += f"### [<img src='https://assets.ubuntu.com/v1/e512b0e2-jenkins.svg' height=32 width=32> Jenkins </img>]({jenkins_url})\n"
