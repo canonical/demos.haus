@@ -108,17 +108,18 @@ def github_demo_webhook():
     remote_build_url = (
         f"http://{JENKINS_URL}/{jenkins_job}/buildWithParameters?{jenkins_job_params}"
     )
+    job_id = ""
 
     # Trigger the build in jenkins
     if not app.debug:
         response = requests.get(remote_build_url)
         response.raise_for_status()
+        # Get the id of the demo
+        job_id = response.headers.get("Location").split("/")[-2]
     else:
         # In debug mode just print the URL
-        print(remote_build_url)
-
-    # Get the id of the demo
-    job_id = response.headers.get("Location").split("/")[-2]
+        app.logger.info(remote_build_url)
+        app.logger.info(job_id)
 
     # If the PR was opened post the the link to the demo
     if action == "opened":
