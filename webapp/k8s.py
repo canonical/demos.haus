@@ -31,7 +31,6 @@ def get_running_demos():
             ]
             and deployment.metadata.labels
         ):
-
             demos.append(
                 {
                     "name": deployment.metadata.name,
@@ -112,3 +111,11 @@ def get_pr_url(labels):
         return f"https://github.com/{labels['github.org']}/{labels['github.repo']}/pull/{labels['github.pr']}"
     except KeyError:
         return ""
+
+
+def get_deployment_logs(name):
+    pod_name = name.replace("-demos-haus", ".demos.haus")
+    pod = corev1.list_namespaced_pod(
+        "default", watch=False, label_selector=f"app={pod_name}"
+    ).items[0]
+    return corev1.read_namespaced_pod_log(pod.metadata.name, "default")

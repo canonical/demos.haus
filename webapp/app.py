@@ -10,6 +10,7 @@ from github3 import login
 from webapp.k8s import (
     get_running_demos,
     get_deployment_status,
+    get_deployment_logs,
     filter_demos_by_name,
     update_pod_state,
 )
@@ -165,3 +166,11 @@ def update_demo():
     pod_name = flask.request.args.get("name")
     update_pod_state(state, pod_name)
     return flask.jsonify({"message": "Pod state updated", "state": state})
+
+
+@app.route("/demo/logs", methods=["GET"])
+@login_required
+def get_logs():
+    pod_name = flask.request.args.get("name")
+    logs = get_deployment_logs(pod_name)
+    return flask.jsonify({"message": "Success", "logs": logs})
