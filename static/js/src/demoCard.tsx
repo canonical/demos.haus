@@ -158,27 +158,27 @@ export default function DemoCard(props: {
             onClick={handleSubmit}
             disabled={demo.status === DemoStates.RUNNING}
           />
-          <button class="p-button has-icon" onClick={toggleLogs}>
+          <button className="p-button has-icon" onClick={toggleLogs}>
             <span>Logs</span>
             {logsVisible ? (
-              <i class="p-icon--collapse"></i>
+              <i className="p-icon--collapse"></i>
             ) : (
-              <i class="p-icon--expand"></i>
+              <i className="p-icon--expand"></i>
             )}
           </button>
         </div>
       </div>
       {logsVisible && (
-        <div class="p-code-snippet">
-          <div class="p-code-snippet__header">
-            <h5 class="p-code-snippet__title">Kubernetes logs</h5>
+        <div className="p-code-snippet">
+          <div className="p-code-snippet__header">
+            <h5 className="p-code-snippet__title">Kubernetes logs</h5>
           </div>
           {isLoading ? (
             <div className="u-align--center p-strip">
               <i className="p-icon--spinner u-animation--spin"></i>
             </div>
           ) : (
-            <pre class="p-code-snippet__code" data-language="javascript">
+            <pre className="p-code-snippet__code" data-language="javascript">
               <p>{logsData}</p>
             </pre>
           )}
