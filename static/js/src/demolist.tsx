@@ -40,7 +40,7 @@ const DemoButton = (props: {
             : "p-button--positive"
         } is-processing`}
       >
-        <i class="p-icon--spinner u-animation--spin is-light"></i>
+        <i className="p-icon--spinner u-animation--spin is-light"></i>
       </button>
     );
   }
@@ -184,7 +184,6 @@ function App() {
   const [demos, setDemos] = React.useState([]);
   const [demosList, setDemosList] = React.useState([]);
   const [searchInput, setSearchInput] = React.useState("");
-  const [filterCache, setFilterCache] = React.useState([]);
   const [isLoading, setIsLoading] = React.useState(true);
 
   const getDemos = () => {
@@ -223,11 +222,10 @@ function App() {
 
   const handleSearch = (query: string) => {
     setDemosList(demos.filter((demo) => demo.name.includes(query)));
-    setFilterCache(demosList); // Cache the filtered list
   };
 
   const handleFilter = (query: string, filterKey: keyof DemoService) => {
-    setDemosList(filterCache.filter((demo) => demo[filterKey].includes(query)));
+    setDemosList(demos.filter((demo) => demo[filterKey].includes(query)));
   };
 
   React.useEffect(() => {

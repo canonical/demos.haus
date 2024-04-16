@@ -10,6 +10,7 @@ interface DemoSearchProps {
 interface SearchChip {
   filterKey: keyof DemoService;
   value: string;
+  color: "caution" | "negative" | "positive" | "information" | "";
 }
 
 interface SearchPanelData {
@@ -24,14 +25,17 @@ const panelData: SearchPanelData[] = [
       {
         filterKey: "status",
         value: "running",
+        color: "positive",
       },
       {
         filterKey: "status",
         value: "failed",
+        color: "negative",
       },
       {
         filterKey: "status",
         value: "building",
+        color: "caution",
       },
     ],
   },
@@ -60,7 +64,7 @@ const SearchPanel = (props: {
     return item.filterKey + item.value;
   };
 
-  const getChipState = (item) => {
+  const getChip = (item) => {
     return chipStates.find((chipState) => chipState.id === getId(item));
   };
 
@@ -75,20 +79,23 @@ const SearchPanel = (props: {
   }, []);
 
   return (
-    <div class="p-search-and-filter__panel">
+    <div className="p-card">
       {props.data.map((item) => {
         return (
-          <div class="p-filter-panel-section">
-            <h3 class="p-filter-panel-section__heading">{item.sectionName}</h3>
-            <div class="p-filter-panel-section__chips" aria-expanded="false">
+          <div>
+            <h3 className="p-heading--3">{item.sectionName}</h3>
+            <div
+              className="p-filter-panel-section__chips"
+              aria-expanded="false"
+            >
               {item.items.map((item) => (
                 <button
-                  class="p-chip"
-                  aria-pressed={`${getChipState(item)?.chipState}`}
+                  className={`p-chip--${item.color}`}
+                  aria-pressed={`${getChip(item)?.chipState}`}
                   onClick={() => handleChipClick(item)}
                 >
-                  <span class="p-chip__lead">{item.filterKey}</span>
-                  <span class="p-chip__value">
+                  <span className="p-chip__lead">{item.filterKey}</span>
+                  <span className="p-chip__value">
                     {item.value.charAt(0).toLocaleUpperCase() +
                       item.value.slice(1)}
                   </span>
@@ -105,20 +112,20 @@ const SearchPanel = (props: {
 export default function DemoSearch(props: DemoSearchProps) {
   return (
     <>
-      <div class="p-search-and-filter">
+      <div className="p-search-and-filter">
         <div
-          class="p-search-and-filter__search-container"
+          className="p-search-and-filter__search-container"
           aria-expanded="false"
           data-active="true"
           data-empty="true"
         >
-          <form class="p-search-and-filter__box" data-overflowing="false">
-            <label class="u-off-screen" for="search">
+          <form className="p-search-and-filter__box" data-overflowing="false">
+            <label className="u-off-screen" htmlFor="search">
               Search and filter
             </label>
             <input
-              autocomplete="off"
-              class="p-search-and-filter__input"
+              autoComplete="off"
+              className="p-search-and-filter__input"
               id="search"
               name="search"
               placeholder="Search and filter"
@@ -126,18 +133,14 @@ export default function DemoSearch(props: DemoSearchProps) {
               onChange={(e) => props.onChange(e.target.value)}
               value={props.value}
             />
-            <button alt="search" class="u-off-screen" type="submit">
+            <button className="u-off-screen" type="submit">
               Search
             </button>
           </form>
         </div>
-        {props.value.length > 0 && (
-          <>
-            <SearchPanel data={panelData} onFilter={props.onFilter} />
-            <div class="p-strip"></div>
-            <div class="p-strip"></div>
-          </>
-        )}
+        <div>
+          <SearchPanel data={panelData} onFilter={props.onFilter} />
+        </div>
       </div>
     </>
   );
