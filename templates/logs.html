@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+{% block content %}
+    <div className="p-strip">
+        <div className="p-card">
+            <div class="row--25-50-25">
+                <div className="p-code-snippet">
+                    <div class="p-code-snippet__header">
+                        <h5 class="p-code-snippet__title">{{ name }} Kubernetes logs</h5>
+                        <pre class  ="p-code-snippet__code" data-language="javascript">
+                            <p>{{ logs }}</p>
+                        </pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock content %}
