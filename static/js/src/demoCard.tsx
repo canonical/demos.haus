@@ -29,11 +29,11 @@ export default function DemoCard(props: {
     );
   };
 
-  const getRecentLogs = (range: number, data: string) => {
+  const getRecentLogs = (range: number, logData: string) => {
     // This is the equivalent of tail -n {range}
     // We split log entries by newlines.
     // Note that this means newlines within logs will be split.
-    let logsList = data.split("\n").slice(-1 * range);
+    let logsList = logData.split("\n").slice(-1 * range);
 
     return logsList.join("\n");
   };
@@ -48,7 +48,7 @@ export default function DemoCard(props: {
     setIsLoading(true);
 
     getLogs().then((data) => {
-      setLogsData(getRecentLogs(20, data.logs));
+      setLogsData(getRecentLogs(20, data.logs || "No logs available"));
       setIsLoading(false);
     });
   };
