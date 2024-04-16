@@ -119,7 +119,7 @@ export default function DemoSearch(props: DemoSearchProps) {
           data-active="true"
           data-empty="true"
         >
-          <form className="p-search-and-filter__box" data-overflowing="false">
+          <div className="p-search-and-filter__box" data-overflowing="false">
             <label className="u-off-screen" htmlFor="search">
               Search
             </label>
@@ -133,10 +133,7 @@ export default function DemoSearch(props: DemoSearchProps) {
               onChange={(e) => props.onChange(e.target.value)}
               value={props.value}
             />
-            <button className="u-off-screen" type="submit">
-              Search
-            </button>
-          </form>
+          </div>
         </div>
         <div>
           <SearchPanel data={panelData} onFilter={props.onFilter} />
