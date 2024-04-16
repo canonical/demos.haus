@@ -121,14 +121,14 @@ export default function DemoSearch(props: DemoSearchProps) {
         >
           <form className="p-search-and-filter__box" data-overflowing="false">
             <label className="u-off-screen" htmlFor="search">
-              Search and filter
+              Search
             </label>
             <input
               autoComplete="off"
               className="p-search-and-filter__input"
               id="search"
               name="search"
-              placeholder="Search and filter"
+              placeholder="Search"
               type="search"
               onChange={(e) => props.onChange(e.target.value)}
               value={props.value}
