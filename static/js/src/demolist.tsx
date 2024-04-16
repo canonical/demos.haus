@@ -113,7 +113,7 @@ const DemoCard = (props: {
             justifyContent: "center",
           }}
         >
-          <a>
+          <a href={demo.host}>
             <h3>{demo.name}</h3>
           </a>
         </div>
