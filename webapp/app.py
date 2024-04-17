@@ -177,4 +177,4 @@ def update_demo():
 def get_logs():
     pod_name = flask.request.args.get("name")
     logs = get_deployment_logs(pod_name)
-    return flask.jsonify({"message": "Success", "logs": logs})
+    return flask.render_template("logs.html", logs=logs, name=pod_name)

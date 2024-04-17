@@ -170,14 +170,32 @@ export default function DemoCard(props: {
       </div>
       {logsVisible && (
         <div className="p-code-snippet">
-          <div className="p-code-snippet__header">
+          <div
+            className="p-code-snippet__header"
+            style={{
+              display: "flex",
+              alignItems: "center",
+              justifyContent: "spaceBetween",
+            }}
+          >
             <h5 className="p-code-snippet__title">Kubernetes logs</h5>
+            <div>
+              <h5 className="p-code-snippet__title">
+                <a
+                  href={`/demo/logs?name=${demo.name}`}
+                  target="_blank"
+                  rel="noreferrer"
+                >
+                  View all logs
+                </a>
+              </h5>
+            </div>
           </div>
           {isLoading ? (
             <div className="u-align--center p-strip">
               <i className="p-icon--spinner u-animation--spin"></i>
             </div>
-          ) : (
+              ) : (
             <pre className="p-code-snippet__code" data-language="javascript">
               <p>{logsData}</p>
             </pre>
