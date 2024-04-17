@@ -1,4 +1,4 @@
-<!doctype html>
+<!DOCTYPE html>
 
 <html lang="en" dir="ltr">
   <head>
@@ -7,31 +7,64 @@
 
     <!-- Add meta name below -->
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    
+
     <!-- Add page title below -->
     <title>Demoservice</title>
-    
+
     <!-- Add preconnect/dns-prefetch below -->
-    <link rel="preconnect" href="https://assets.ubuntu.com">
+    <link rel="preconnect" href="https://assets.ubuntu.com" />
     <!-- <link rel="dns-prefetch" href="http://www.spreadfirefox.com/"> -->
-    
+
     <!-- Add inline JS below -->
-    <script>// Inline JS</script>
-    
+    <script>
+      // Inline JS
+    </script>
+
     <!-- Add stylesheet below -->
-    <link rel="stylesheet" type="text/css" media="screen" href="/static/css/styles.css" />
-    
+    <link
+      rel="stylesheet"
+      type="text/css"
+      media="screen"
+      href="/static/css/styles.css"
+    />
+
     <!-- Add inline CSS below -->
-    <style>/* Inline CSS */</style>
-    
+    <style>
+      /* Inline CSS */
+    </style>
+
     <!-- Add preload below -->
-    <link rel="preload" as="font" type="font/woff2" href="https://assets.ubuntu.com/v1/e8c07df6-Ubuntu-L_W.woff2" crossorigin>
-    <link rel="preload" as="font" type="font/woff2" href="https://assets.ubuntu.com/v1/7f100985-Ubuntu-Th_W.woff2" crossorigin>
-    <link rel="preload" as="font" type="font/woff2" href="https://assets.ubuntu.com/v1/f8097dea-Ubuntu-LI_W.woff2" crossorigin>
-    <link rel="preload" as="font" type="font/woff2" href="https://assets.ubuntu.com/v1/fff37993-Ubuntu-R_W.woff2" crossorigin>
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="https://assets.ubuntu.com/v1/e8c07df6-Ubuntu-L_W.woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="https://assets.ubuntu.com/v1/7f100985-Ubuntu-Th_W.woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="https://assets.ubuntu.com/v1/f8097dea-Ubuntu-LI_W.woff2"
+      crossorigin
+    />
+    <link
+      rel="preload"
+      as="font"
+      type="font/woff2"
+      href="https://assets.ubuntu.com/v1/fff37993-Ubuntu-R_W.woff2"
+      crossorigin
+    />
 
     <!-- Add script below -->
-    <!-- <script src=""></script> -->
+    <script src="/static/js/dist/demolist.js" defer></script>
 
     <!-- Add prefetch/prerender below -->
     <!-- <link rel="prefetch" href="/style.css" as="style" />
@@ -42,45 +75,31 @@
     <!-- Add navigation below -->
     <main>
       <!-- Add main content below -->
-      <div class="p-strip--dark">
-        <div class="u-fixed-width">
-	    	<h1>Demoservice</h1>
+      <div class="row">
+        <div class="p-breadcrumbs" aria-label="Breadcrumbs">
+          <ol class="p-breadcrumbs__items p-text--small-caps">
+            <li class="p-breadcrumbs__item">
+              <a href="https://webteam.canonical.com">Webteam</a>
+            </li>
+            <li class="p-breadcrumbs__item">Demo Service</li>
+          </ol>
         </div>
+        <hr class="p-rule" />
       </div>
       <div class="p-strip is-shallow">
         <div class="row">
-          <h1 class="p-heading--3"> Jenkins Jobs</h1>
-          <a href="https://jenkins.canonical.com/webteam/securityRealm/commenceLogin?from=%2Fwebteam%2Fview%2Fdemos%2Fjob%2Fstart-demo%2Fbuild">Start demo</a>
-          <a href="https://jenkins.canonical.com/webteam/securityRealm/commenceLogin?from=%2Fwebteam%2Fview%2Fdemos%2Fjob%2Fstop-demo%2Fbuild">Stop demo</a>
+          <h1 class="p-heading--3">Jenkins Jobs</h1>
+          <a
+            href="https://jenkins.canonical.com/webteam/securityRealm/commenceLogin?from=%2Fwebteam%2Fview%2Fdemos%2Fjob%2Fstart-demo%2Fbuild"
+            >Start demo</a
+          >
+          <a
+            href="https://jenkins.canonical.com/webteam/securityRealm/commenceLogin?from=%2Fwebteam%2Fview%2Fdemos%2Fjob%2Fstop-demo%2Fbuild"
+            >Stop demo</a
+          >
         </div>
       </div>
-      <div  class="p-strip">
-        <div class="row">
-        <h1 class="p-heading--3">Running demos</h1>
-          <div class="u-fixed-width">
-            <table>
-            <thead>
-              <tr>
-                <th>Name</th>
-                <th>Host</th>
-                <th>PR</th>
-                <th>Start time</th>
-              </tr>
-            </thead>
-            {% for demo in demos %}
-          <tbody>
-            <tr>
-              <td>{{demo.name}}</td>
-              <td><a href="{{demo.host}}">{{demo.host}}</a></td>
-              <td><a href="{{demo.pr_url}}">{{demo.pr_url}}</a></td>
-              <td>{{demo.start_time}}</td>
-            </tr>
-            {% endfor %}
-            </tbody>
-            </table>
-          </div>
-        </div>
-      </div>
+      <div id="demolist"></div>
     </main>
     <!-- Add footer below -->
   </body>
