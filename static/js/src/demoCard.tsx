@@ -182,7 +182,7 @@ export default function DemoCard(props: {
             <div>
               <h5 className="p-code-snippet__title">
                 <a
-                  href={`/demo/logs?name=${demo.name}`}
+                  href={`/demo/logs/complete?name=${demo.name}`}
                   target="_blank"
                   rel="noreferrer"
                 >
