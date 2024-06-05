@@ -102,6 +102,7 @@ def github_demo_webhook():
         return flask.jsonify({"message": message}, 403)
 
     # Check if the db should be deleted
+    keepdb = False
     for label in payload["pull_request"]["labels"]:
         if label["name"] == "keepdb":
             keepdb = True
