@@ -102,9 +102,10 @@ def github_demo_webhook():
         return flask.jsonify({"message": message}, 403)
 
     # Check if the db should be deleted
-    keepdb = (
-        "true" if "keepdb" in payload["pull_request"]["labels"] else "false"
-    )
+    for label in payload["pull_request"]["labels"]:
+        if label["name"] == "keepdb":
+            keepdb = True
+            break
 
     # Work out the remote build url
     try:
