@@ -39,6 +39,7 @@ init_sso(app)
 
 
 def get_jenkins_job(action):
+    # To be changed after QA
     return {
         "opened": "webteam/job/start-demo",
         "synchronize": "webteam/job/start-demo",
@@ -100,6 +101,13 @@ def github_demo_webhook():
 
         return flask.jsonify({"message": message}, 403)
 
+    # Check if the db should be deleted
+    keepdb = "false"
+    for label in payload["pull_request"]["labels"]:
+        if label["name"] == "keepdb":
+            keepdb = "true"
+            break
+
     # Work out the remote build url
     try:
         jenkins_job = get_jenkins_job(action)
@@ -109,10 +117,10 @@ def github_demo_webhook():
             200,
         )
 
-    jenkins_job_params = f"token={JENKINS_TOKEN}&PR_URL={pull_request_url}"
-    remote_build_url = (
-        f"http://{JENKINS_URL}/{jenkins_job}/buildWithParameters?{jenkins_job_params}"
+    jenkins_job_params = (
+        f"token={JENKINS_TOKEN}&PR_URL={pull_request_url}&KEEP_DB={keepdb}"
     )
+    remote_build_url = f"http://{JENKINS_URL}/{jenkins_job}/buildWithParameters?{jenkins_job_params}"
     job_id = ""
 
     # Trigger the build in jenkins
@@ -128,7 +136,9 @@ def github_demo_webhook():
 
     # If the PR was opened post the the link to the demo
     if action == "opened":
-        demo_url = f"https://{repo_name.replace('.', '-')}-{pull_request}.demos.haus"
+        demo_url = (
+            f"https://{repo_name.replace('.', '-')}-{pull_request}.demos.haus"
+        )
         jenkins_url = f"{JENKINS_PUBLIC_URL}/{jenkins_job}/{job_id}"
 
         comment = f"### [<img src='https://assets.ubuntu.com/v1/6baef514-ubuntu-circle-of-friends-large.svg' height=32 width=32> Demo</img>]({demo_url})\n"
