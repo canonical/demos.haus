@@ -41,8 +41,8 @@ init_sso(app)
 def get_jenkins_job(action):
     # To be changed after QA
     return {
-        "opened": "webteam/job/start-demo-test",
-        "synchronize": "webteam/job/start-demo-test",
+        "opened": "webteam/job/start-demo",
+        "synchronize": "webteam/job/start-demo",
         "closed": "webteam/job/stop-demo",
     }[action]
 
