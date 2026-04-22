@@ -22,6 +22,7 @@ JENKINS_PUBLIC_URL = os.environ["JENKINS_PUBLIC_URL"]
 JENKINS_TOKEN = os.environ["JENKINS_TOKEN"]
 GITHUB_ACCESS_TOKEN = os.environ["GITHUB_ACCESS_TOKEN"]
 GITHUB_WEBHOOK_SECRET = os.environ["GITHUB_WEBHOOK_SECRET"]
+ALLOWED_GITHUB_ORG = "canonical"
 
 # Create GitHub client
 ghub = login(token=GITHUB_ACCESS_TOKEN)
@@ -84,6 +85,14 @@ def github_demo_webhook():
     repo_owner = payload["repository"]["owner"]["login"]
     repo_name = payload["repository"]["name"]
     author = payload["sender"]["login"]
+
+    if repo_owner.lower() != ALLOWED_GITHUB_ORG:
+        return (
+            flask.jsonify(
+                {"message": "Only canonical org repositories are supported"}
+            ),
+            403,
+        )
 
     issue = ghub.issue(repo_owner, repo_name, pull_request)
     repo = ghub.repository(repo_owner, repo_name)
